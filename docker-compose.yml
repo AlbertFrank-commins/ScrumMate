@@ -1,0 +1,62 @@
+# Módulo C (Ezequiel). Levanta todo en local: cp .env.example .env && docker compose up -d
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-scrummate}
+      POSTGRES_USER: ${POSTGRES_USER:-scrummate}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scrummate}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scrummate}"]
+      interval: 5s
+      retries: 10
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+  ollama-init:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["ollama", "pull", "${Ollama__Model:-qwen2.5:3b}"]
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api/v1
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+    # TODO (Ezequiel): en nginx.conf, redirigir /api a http://api:8080 para que el frontend en Docker llegue a la API.
+
+volumes:
+  pgdata:
+  ollama:

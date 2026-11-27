@@ -1,0 +1,24 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+coverage*/
+
+# Node
+node_modules/
+dist/
+frontend/src/api/esquema.d.ts
+e2e/test-results/
+e2e/playwright-report/
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+k8s/base/secret.yaml
+
+# Sistema
+.DS_Store
+Thumbs.db

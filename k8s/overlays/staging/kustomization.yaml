@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/ORGANIZACION/scrummate-api
+    newTag: develop
+  - name: ghcr.io/ORGANIZACION/scrummate-web
+    newTag: develop
+replicas:
+  - name: api
+    count: 1
+  - name: web
+    count: 1

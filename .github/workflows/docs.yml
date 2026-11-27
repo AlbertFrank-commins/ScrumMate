@@ -1,0 +1,15 @@
+# Módulo C (Ezequiel). Valida enlaces de la documentación.
+name: Docs
+
+on:
+  pull_request:
+    paths: ["docs/**", "README.md"]
+
+jobs:
+  enlaces:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress "docs/**/*.md" README.md

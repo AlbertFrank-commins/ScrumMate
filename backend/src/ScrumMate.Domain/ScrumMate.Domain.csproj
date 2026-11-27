@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Módulo A (Albert). Capa de dominio: no depende de ningún otro proyecto ni paquete. -->
+</Project>

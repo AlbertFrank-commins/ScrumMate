@@ -1,0 +1,21 @@
+# Módulo C (Ezequiel). Al etiquetar vX.Y.Z en main: imágenes versionadas, despliegue demo, E2E y GitHub Release.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO (Ezequiel): publicar imágenes :vX.Y.Z y :latest, desplegar overlay demo, correr Playwright.
+      - name: Crear GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true

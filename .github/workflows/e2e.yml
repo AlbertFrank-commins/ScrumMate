@@ -1,0 +1,25 @@
+# Módulo C (Ezequiel). Suite E2E completa contra Docker Compose (manual y nocturna).
+name: E2E
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cp .env.example .env
+      - run: docker compose up -d --build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - working-directory: e2e
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+          npx playwright test
+      - if: always()
+        run: docker compose down -v

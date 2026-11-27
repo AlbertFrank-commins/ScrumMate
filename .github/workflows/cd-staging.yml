@@ -1,0 +1,33 @@
+# Módulo C (Ezequiel). Cada merge a develop publica imágenes y despliega en staging (kind).
+name: CD staging
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # TODO (Ezequiel): construir y publicar ghcr.io/<org>/scrummate-api y scrummate-web
+      #   con tags :develop y :sha-${{ github.sha }} (docker/build-push-action@v6).
+      - run: echo "TODO publicar imágenes"
+
+  desplegar:
+    runs-on: ubuntu-latest
+    needs: publicar
+    steps:
+      - uses: actions/checkout@v4
+      # TODO (Ezequiel): helm/kind-action@v1, instalar ingress-nginx,
+      #   kubectl apply -k k8s/overlays/staging y prueba de humo a /health.
+      - run: echo "TODO desplegar en kind"

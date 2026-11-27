@@ -1,0 +1,16 @@
+@api = http://localhost:5080/api/v1
+
+### Salud
+GET http://localhost:5080/health
+
+### Registro
+POST {{api}}/auth/registro
+Content-Type: application/json
+
+{ "nombre": "Albert", "email": "albert@scrummate.dev", "password": "Cambiar123!" }
+
+### Login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "albert@scrummate.dev", "password": "Cambiar123!" }

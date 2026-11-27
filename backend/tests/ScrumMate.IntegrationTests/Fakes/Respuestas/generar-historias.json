@@ -1,0 +1,5 @@
+{
+  "historias": [
+    { "titulo": "Ver historias estancadas", "comoUn": "Scrum Master", "quiero": "ver las historias que llevan más de 3 días en revisión", "para": "destrabarlas a tiempo", "prioridad": "Alta" }
+  ]
+}

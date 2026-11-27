@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API (.NET)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-api",
+      "program": "${workspaceFolder}/backend/src/ScrumMate.Api/bin/Debug/net8.0/ScrumMate.Api.dll",
+      "cwd": "${workspaceFolder}/backend/src/ScrumMate.Api",
+      "env": { "ASPNETCORE_ENVIRONMENT": "Development", "ASPNETCORE_URLS": "http://localhost:5080" }
+    }
+  ]
+}

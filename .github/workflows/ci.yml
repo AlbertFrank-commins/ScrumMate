@@ -1,0 +1,56 @@
+# Módulo C (Ezequiel). Se ejecuta en cada PR hacia develop o main.
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: scrummate_test
+          POSTGRES_USER: scrummate
+          POSTGRES_PASSWORD: scrummate
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet restore backend/ScrumMate.sln
+      - run: dotnet format backend/ScrumMate.sln --verify-no-changes --no-restore
+      - run: dotnet build backend/ScrumMate.sln --no-restore -c Release
+      - run: dotnet test backend/ScrumMate.sln --no-build -c Release --collect:"XPlat Code Coverage"
+      # TODO (Ezequiel): publicar el reporte de cobertura (ReportGenerator) como artefacto.
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f backend/Dockerfile -t scrummate-api:ci .
+      - run: docker build -t scrummate-web:ci ./frontend
