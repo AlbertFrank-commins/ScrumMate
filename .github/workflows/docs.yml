@@ -13,3 +13,5 @@ jobs:
       - uses: lycheeverse/lychee-action@v2
         with:
           args: --offline --no-progress "docs/**/*.md" README.md
+          # No falla si los documentos aún no tienen enlaces.
+          failIfEmpty: false
